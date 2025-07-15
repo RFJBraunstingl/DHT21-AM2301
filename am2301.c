@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
     while (i < 10) {
 	ret = read_am2301(&s, 1);
 	if (ret == 0) {
-	    printf("{\n\t\"temp\": %.1f\n\t\"rh\": %.1f\n}", s.t, s.rh);
+	    printf("{\n\t\"temp\": %.1f,\n\t\"rh\": %.1f\n}", s.t, s.rh);
 	    break;
 	}
 	delay(2000);
