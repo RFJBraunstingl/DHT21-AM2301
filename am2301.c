@@ -28,7 +28,7 @@ Lesser General Public License for more details.
 #include <sys/stat.h>
 
 /* Connect DATA to GPIO24 (pin 18). In wiringPi pin number is 5 */
-static const int _pin_am2301 = 5;
+int _pin_am2301 = 5;
 
 static void do_init(void);
 
@@ -169,6 +169,17 @@ int main(int argc, char *argv[])
     int ret;
     sensor_data s;
 
+    if (argc < 2) {
+	    printf("usage: am2103 <wiring_pi_pin_number> [<debug>]\n");
+	    exit(-1);
+    }
+
+    int pin_from_args = atoi(argv[1]);
+    if (argc > 2) {
+	printf("INFO: using wiring-pi pin '%d'\n", pin_from_args);
+    }
+    _pin_am2301 = pin_from_args;
+
     do_init();
 
     /* Try 10 times, then bail out.
@@ -176,7 +187,7 @@ int main(int argc, char *argv[])
     while (i < 10) {
 	ret = read_am2301(&s, 1);
 	if (ret == 0) {
-	    printf("t=%.1f\nrh=%.1f\n", s.t, s.rh);
+	    printf("{\n\t\"temp\": %.1f\n\t\"rh\": %.1f\n}", s.t, s.rh);
 	    break;
 	}
 	delay(2000);
